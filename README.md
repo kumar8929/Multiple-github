@@ -1,82 +1,185 @@
-# Managing Multiple GitHub Accounts
+# How To Work With Multiple Github Accounts on a single Machine
 
-Working with multiple GitHub accounts can be challenging, but it is manageable with the right approach. This guide will walk you through the steps to efficiently handle multiple GitHub accounts on the same machine.
+Let suppose I have two github accounts, **https:/<span></span>/github.com<span></span>/kishorekishore-office** and **https:/<span></span>/github.com<span></span>/kishore-personal**. Now i want to setup my laptop to easily talk to both the github accounts.
 
-## Table of Contents
-1. [Setting Up SSH Keys](#setting-up-ssh-keys)
-2. [Configuring SSH](#configuring-ssh)
-3. [Setting Up Git Configurations](#setting-up-git-configurations)
-4. [Cloning Repositories](#cloning-repositories)
-5. [Switching Between Accounts](#switching-between-accounts)
+> NOTE: This can be extended to more than two accounts also. :)
 
-## 1. Setting Up SSH Keys
-First, generate SSH keys for each of your GitHub accounts.
+The setup can be done in 5 easy steps:
+## Steps:
+- [Step 1](#step-1) : Create SSH keys for all accounts
+- [Step 2](#step-2) : Add SSH keys to SSH Agent
+- [Step 3](#step-3) : Add SSH public key to the Github
+- [Step 4](#step-4) : Create a Config File and Make Host Entries
+- [Step 5](#step-5) : Cloning GitHub repositories using different accounts
 
-**Personal Account:**
+<br>
+
+## Step 1
+### Create SSH keys for all accounts
+First make sure your current directory is your **.ssh** folder.
 ```sh
-ssh-keygen -t rsa -b 4096 -C "your_personal_email@example.com"
-Save the key as ~/.ssh/id_rsa_personal.
-Work Account:
+     $ cd ~/.ssh
+```
+Syntax for generating unique ssh key for ann account is:
+```sh
+     ssh-keygen -t rsa -C "your-email-address" -f "github-username"
+```
+here,
 
-sh
+**-C** stands for comment to help identify your ssh key
 
-ssh-keygen -t rsa -b 4096 -C "your_work_email@example.com"
-Save the key as ~/.ssh/id_rsa_work.
-Add the generated keys to the SSH agent:
+**-f** stands for the file name where your ssh key get saved
 
-sh
 
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_rsa_personal
-ssh-add ~/.ssh/id_rsa_work
-2. Configuring SSH
-Next, create an SSH configuration file to distinguish between the accounts.
+#### Now generating SSH keys for my two accounts
+```sh
+     ssh-keygen -t rsa -C "my_office_email@gmail.com" -f "github-kishore-office"
+     ssh-keygen -t rsa -C "my_personal_email@gmail.com" -f "github-kishore-personal"
+```
 
-Edit (or create) the ~/.ssh/config file:
+Notice here **kishore-office** and **kishore-work** are the username of my github accounts corresponding to **my_office_email<span></span>@gmail.com** and **my_personal_email<span></span>@gmail.com** email ids respectively.
 
-sh
-# Personal GitHub account
-Host github.com-personal
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_rsa_personal
+After entering the command the terminal will ask for passphrase, leave it empty and proceed.
 
-# Work GitHub account
-Host github.com-work
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/id_rsa_work
-3. Setting Up Git Configurations
-Configure Git to use different user information for each repository.
+![Passphrase Image](https://raw.githubusercontent.com/kishorearity/github-essentials/bc3dafc37b36f5fb4ebcffcba63a7689a36fc7ff/screenshots/passphrase.png)
 
-Personal Account:
+> Now after adding keys , in your .ssh folder, a public key and a private will get generated.
 
-sh
+>The public key will have an extention __.pub__ and private key will be there without any extention both having same name which you have passed after __-f__ option in the above command. (in my case __github-kishore-office__ and __github-rahu-personal__)
 
-git config --global user.name "Your Name"
-git config --global user.email "your_personal_email@example.com"
-For the work account, configure Git per repository:
+![Added Key Image](https://raw.githubusercontent.com/kishorearity/github-essentials/master/screenshots/ssh_keys_added.png)
 
-sh
+<br>
 
-cd path/to/your/work-repo
-git config user.name "Your Name"
-git config user.email "your_work_email@example.com"
-4. Cloning Repositories
-When cloning repositories, use the configured SSH hosts.
+## Step 2
+### Add SSH keys to SSH Agent
+Now we have the keys but it cannot be used until we add them to the SSH Agent.
+```sh
+     ssh-add -K ~/.ssh/github-kishore-office
+     ssh-add -K ~/.ssh/github-kishore-personal
+```
 
-Personal Repository:
+You can read more about adding keys to SSH Agent [here.](https://help.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
 
-sh
+<br>
 
-git clone git@github.com-personal:username/repo.git
-Work Repository:
+## Step 3
+### Add SSH public key to the Github
+For the next step we need to add our public key (that we have generated in our previous step) and add it to corresponding github accounts.
 
-sh
+For doing this we need to:
 
-git clone git@github.com-work:work-username/repo.git
+__1. Copy the public key__
 
-5. Switching Between Accounts
-Git will automatically use the correct SSH key based on the repository URL. To switch between accounts, simply navigate to the repository's directory.
+     We can copy the public key either by opening the github-kishore-office.pub file in vim and then copying the content of it.
+```sh
+     vim ~/.ssh/github-kishore-office.pub
+     vim ~/.ssh/github-kishore-personal.pub
+```
 
-If you need to push or pull, Git will use the user information configured for that repository.
+<p align="center">OR
+
+We can directly copy the content of the public key file in the clipboard.
+
+```sh
+     pbcopy < ~/.ssh/github-kishore-office.pub
+     pbcopy < ~/.ssh/github-kishore-personal.pub
+```   
+
+
+__2. Paste the public key on Github__
+
+* Sign in to Github Account
+* Goto **Settings** > **SSH and GPG keys** > **New SSH Key**
+* Paste your copied public key and give it a Title of your choice.
+
+___OR___
+
+* Sign in to Github 
+* Paste this link in your browser (https://github.com/settings/keys) or click [here](https://github.com/settings/keys)
+* Click on **New SSH Key** and paste your copied key.
+
+<br>
+
+## Step 4
+### Create a Config File and Make Host Entries
+
+The **~/.ssh/config** file allows us specify many config options for SSH.
+
+If **config** file not already exists then create one (make sure you are in **~/.ssh** directory)
+
+```sh
+     touch config
+```
+
+The commands below opens config in your default editor....Likely TextEdit, VS Code.
+```sh
+     open config
+```
+Now we need to add these lines to the file, each block corresponding to each account we created earlier.
+```config
+     #kishore-office account
+     Host github.com-kishore-office
+          HostName github.com
+          User git
+          IdentityFile ~/.ssh/github-kishore-office
+
+     #kishore-personal account
+     Host github.com-kishore-personal
+          HostName github.com
+          User git
+          IdentityFile ~/.ssh/github-kishore-personal
+```
+
+<br>
+
+## Step 5
+### Cloning GitHub repositories using different accounts
+
+So we are done with our setups and now its time to see it in action. We will clone a repository using one of the account we have added.
+
+Make a new project folder where you want to clone your repository and go to that directory from your terminal.
+
+For Example:
+I am making a repository on my personal github account and naming it **TestRepo**
+Now for cloning the repo use the below command:
+ ```git
+     git clone git@github.com-{your-username}:{owner-user-name}/{the-repo-name}.git
+
+     [e.g.] git clone git@github.com-kishore-personal:kishore-personal/TestRepo.git
+ ```
+
+ <br>
+
+ ## Finally
+
+From now on, to ensure that our commits and pushes from each repository on the system uses the correct GitHub user — we will have to configure **user.email** and **user.name** in every repository freshly cloned or existing before.
+
+To do this use the following commands.
+
+```git
+     git config user.email "my_office_email@gmail.com"
+     git config user.name "Rahul Pandey"
+     
+     git config user.email "my-personal-email@gmail.com"
+     git config user.name "Rahul Pandey"
+```
+Pick the correct pair for your repository accordingly.
+
+
+To push or pull to the correct account we need to add the remote origin to the project
+```git
+     git remote add origin git@github.com-kishore-personal:kishore-personal
+     
+     git remote add origin git@github.com-kishore-office:kishore-office
+```
+
+Now you can use:
+```git
+     git push
+     
+     git pull
+```
+
+> P.S: <br> If this gist has been helpful to you, kindly consider leaving a star. 
+>   <br>   If you'd like, let's connect on [LinkedIn](https://www.linkedin.com/in/kishorearity) and build a supportive community together.
