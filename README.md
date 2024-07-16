@@ -5,7 +5,7 @@ Let suppose I have two github accounts, **https:/<span></span>/github.com<span><
 > NOTE: This can be extended to more than two accounts also. :)
 
 The setup can be done in 5 easy steps:
-## Steps:
+## Steps To Follow:
 - [Step 1](#step-1) : Create SSH keys for all accounts
 - [Step 2](#step-2) : Add SSH keys to SSH Agent
 - [Step 3](#step-3) : Add SSH public key to the Github
