@@ -182,4 +182,4 @@ Now you can use:
 ```
 
 > P.S: <br> If this gist has been helpful to you, kindly consider leaving a star. 
->   <br>   If you'd like, let's connect on [LinkedIn](https://www.linkedin.com/in/kishorearity) and build a supportive community together.
+>   <br>   If you'd like, let's connect on [LinkedIn](https://www.linkedin.com/in) and build a supportive community together.
