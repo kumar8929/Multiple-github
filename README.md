@@ -45,7 +45,7 @@ After entering the command the terminal will ask for passphrase, leave it empty 
 
 > Now after adding keys , in your .ssh folder, a public key and a private will get generated.
 
->The public key will have an extention __.pub__ and private key will be there without any extention both having same name which you have passed after __-f__ option in the above command. (in my case __github-kishore-office__ and __github-rahu-personal__)
+>The public key will have an extention __.pub__ and private key will be there without any extention both having same name which you have passed after __-f__ option in the above command. (in my case __github-kishore-office__ and __github-kishore-personal__)
 
 ![Added Key Image](https://raw.githubusercontent.com/kishorearity/github-essentials/master/screenshots/ssh_keys_added.png)
 
