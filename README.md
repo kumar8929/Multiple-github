@@ -159,10 +159,10 @@ To do this use the following commands.
 
 ```git
      git config user.email "my_office_email@gmail.com"
-     git config user.name "Rahul Pandey"
+     git config user.name "kumar"
      
      git config user.email "my-personal-email@gmail.com"
-     git config user.name "Rahul Pandey"
+     git config user.name "kumar"
 ```
 Pick the correct pair for your repository accordingly.
 
